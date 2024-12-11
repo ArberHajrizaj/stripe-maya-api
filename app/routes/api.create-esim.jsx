@@ -1,17 +1,19 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
+import QRCode from "qrcode";
 
 export const action = async ({ request }) => {
   try {
-    const { customer_id, plan_type_id, region } = await request.json();
-    if (!customer_id || !plan_type_id || !region) {
-      throw new Error("Missing required fields");
+    const { customer_id, plan_type_id } = await request.json();
+
+    if (!customer_id || !plan_type_id) {
+      throw new Error("Missing required fields.");
     }
 
     // Fetch API keys from the database
     const settings = await prisma.apiSettings.findFirst();
     if (!settings || !settings.mayaApiKey || !settings.mayaSecretKey) {
-      throw new Error("Maya API keys are missing in settings");
+      throw new Error("Maya API keys are missing in settings.");
     }
 
     const authString = `${settings.mayaApiKey}:${settings.mayaSecretKey}`;
@@ -26,24 +28,24 @@ export const action = async ({ request }) => {
           "Content-Type": "application/json",
           Authorization: `Basic ${encodedAuthString}`,
         },
-        body: JSON.stringify({
-          customer_id, // Maya customer ID
-          plan_type_id, // Plan ID for the eSIM
-          region, // Region code for the eSIM
-        }),
-      },
+        body: JSON.stringify({ customer_id, plan_type_id }),
+      }
     );
 
     const esimData = await esimResponse.json();
+
     if (!esimResponse.ok) {
-      throw new Error(
-        `Failed to create eSIM: ${esimData.message || esimData.error}`,
-      );
+      throw new Error(`Failed to create eSIM: ${esimData.message}`);
     }
 
-    return json({ esim: esimData });
+    const { activation_code, uid } = esimData.esim;
+
+    // Generate a QR Code
+    const qrCodeUrl = await QRCode.toDataURL(activation_code);
+
+    return json({ activation_code, qrCodeUrl, uid });
   } catch (error) {
-    console.error("Error creating eSIM:", error);
+    console.error("Error creating eSIM:", error.message);
     return json({ error: error.message }, { status: 500 });
   }
 };

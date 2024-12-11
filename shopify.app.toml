@@ -3,7 +3,7 @@
 client_id = "7f4b161d9d42b0b33e269db079b92330"
 name = "stripe-maya-api"
 handle = "stripe-maya-api-1"
-application_url = "https://computed-appointment-records-ips.trycloudflare.com"
+application_url = "https://falling-les-impacts-abroad.trycloudflare.com"
 embedded = true
 
 [build]
@@ -163,7 +163,37 @@ redirect_urls = [
   "https://casa-duty-appreciate-scored.trycloudflare.com/api/auth/callback",
   "https://computed-appointment-records-ips.trycloudflare.com/auth/callback",
   "https://computed-appointment-records-ips.trycloudflare.com/auth/shopify/callback",
-  "https://computed-appointment-records-ips.trycloudflare.com/api/auth/callback"
+  "https://computed-appointment-records-ips.trycloudflare.com/api/auth/callback",
+  "https://pamela-networks-seminar-accident.trycloudflare.com/auth/callback",
+  "https://pamela-networks-seminar-accident.trycloudflare.com/auth/shopify/callback",
+  "https://pamela-networks-seminar-accident.trycloudflare.com/api/auth/callback",
+  "https://nav-reef-hamilton-routing.trycloudflare.com/auth/callback",
+  "https://nav-reef-hamilton-routing.trycloudflare.com/auth/shopify/callback",
+  "https://nav-reef-hamilton-routing.trycloudflare.com/api/auth/callback",
+  "https://spotlight-candidates-know-gs.trycloudflare.com/auth/callback",
+  "https://spotlight-candidates-know-gs.trycloudflare.com/auth/shopify/callback",
+  "https://spotlight-candidates-know-gs.trycloudflare.com/api/auth/callback",
+  "https://trick-multimedia-surely-stay.trycloudflare.com/auth/callback",
+  "https://trick-multimedia-surely-stay.trycloudflare.com/auth/shopify/callback",
+  "https://trick-multimedia-surely-stay.trycloudflare.com/api/auth/callback",
+  "https://guilty-scientific-paint-atom.trycloudflare.com/auth/callback",
+  "https://guilty-scientific-paint-atom.trycloudflare.com/auth/shopify/callback",
+  "https://guilty-scientific-paint-atom.trycloudflare.com/api/auth/callback",
+  "https://mauritius-harder-showed-gains.trycloudflare.com/auth/callback",
+  "https://mauritius-harder-showed-gains.trycloudflare.com/auth/shopify/callback",
+  "https://mauritius-harder-showed-gains.trycloudflare.com/api/auth/callback",
+  "https://always-intelligence-witness-exhaust.trycloudflare.com/auth/callback",
+  "https://always-intelligence-witness-exhaust.trycloudflare.com/auth/shopify/callback",
+  "https://always-intelligence-witness-exhaust.trycloudflare.com/api/auth/callback",
+  "https://enrollment-clone-baghdad-impressed.trycloudflare.com/auth/callback",
+  "https://enrollment-clone-baghdad-impressed.trycloudflare.com/auth/shopify/callback",
+  "https://enrollment-clone-baghdad-impressed.trycloudflare.com/api/auth/callback",
+  "https://beside-prepare-albuquerque-experiment.trycloudflare.com/auth/callback",
+  "https://beside-prepare-albuquerque-experiment.trycloudflare.com/auth/shopify/callback",
+  "https://beside-prepare-albuquerque-experiment.trycloudflare.com/api/auth/callback",
+  "https://falling-les-impacts-abroad.trycloudflare.com/auth/callback",
+  "https://falling-les-impacts-abroad.trycloudflare.com/auth/shopify/callback",
+  "https://falling-les-impacts-abroad.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -12,7 +12,7 @@ const SuccessPage = () => {
       }
 
       const stripeResponse = await fetch(
-        `/api/get-stripe-session?session_id=${sessionId}`
+        `/api/get-stripe-session?session_id=${sessionId}`,
       );
       const stripeData = await stripeResponse.json();
 
@@ -23,9 +23,11 @@ const SuccessPage = () => {
       const { email, name } = stripeData.customer_details || {};
       const lineItems = stripeData.line_items?.data || [];
 
+      console.log("Email from Stripe session:", email);
+
       if (!email || !name || lineItems.length === 0) {
         throw new Error(
-          "Stripe session data is incomplete. Missing email, name, or line items."
+          "Stripe session data is incomplete. Missing email, name, or line items.",
         );
       }
 
@@ -63,8 +65,7 @@ const SuccessPage = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             customer_id: mayaCustomerId,
-            plan_type_id: planTypeId, // Use the dynamic PlanID from metadata
-            region: "US", // Use a static region for now
+            plan_type_id: planTypeId,
           }),
         });
 
@@ -73,12 +74,29 @@ const SuccessPage = () => {
           throw new Error(`Failed to create eSIM: ${esimData.error}`);
         }
 
-        console.log("eSIM created successfully:", esimData);
+        console.log("Sending email with details:", {
+          email,
+          qrCodeUrl: esimData.qrCodeUrl,
+          activationCode: esimData.activation_code,
+        });
+
+        // Send email with QR code and activation code
+        await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email, // Retrieved from Stripe
+            qrCodeUrl: esimData.qrCodeUrl, // Generated QR code URL
+            activationCode: esimData.activation_code, // Activation code from eSIM API
+          }),
+        });
+
+        console.log("eSIM created successfully and email sent:", esimData);
       }
     } catch (error) {
       console.error(
         "Error during customer and eSIM creation process:",
-        error.message
+        error.message,
       );
     }
   };
@@ -87,18 +105,16 @@ const SuccessPage = () => {
     if (sessionId) {
       console.log(
         "Session ID available, calling createCustomerAndEsim with sessionId:",
-        sessionId
+        sessionId,
       );
       createCustomerAndEsim(sessionId);
-    } else {
-      console.error("No sessionId found!");
     }
   }, [sessionId]);
 
   return (
     <div>
       <h1>Payment successful!</h1>
-      <p>Your customer record and eSIM will be created soon.</p>
+      <p>Your customer record and eSIM(s) will be created and emailed soon.</p>
     </div>
   );
 };
