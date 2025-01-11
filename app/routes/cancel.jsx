@@ -1,4 +1,15 @@
-// app/routes/cancel.jsx
 export default function Cancel() {
-    return <h1>Payment canceled. Please try again.</h1>;
-  }
+  const handleBackToStore = () => {
+    window.location.href = "/"; 
+  };
+
+  return (
+    <div className="canceled">
+      <h1>Payment Canceled</h1>
+      <p>There was an issue with your payment. Please try again or contact support.</p>
+      <button className="backToStoreButton" onClick={handleBackToStore}>
+        Back to Store
+      </button>
+    </div>
+  );
+}

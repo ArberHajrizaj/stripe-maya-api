@@ -3,7 +3,7 @@
 client_id = "7f4b161d9d42b0b33e269db079b92330"
 name = "stripe-maya-api"
 handle = "stripe-maya-api-1"
-application_url = "https://falling-les-impacts-abroad.trycloudflare.com"
+application_url = "https://signature-florence-spin-oaks.trycloudflare.com"
 embedded = true
 
 [build]
@@ -193,7 +193,19 @@ redirect_urls = [
   "https://beside-prepare-albuquerque-experiment.trycloudflare.com/api/auth/callback",
   "https://falling-les-impacts-abroad.trycloudflare.com/auth/callback",
   "https://falling-les-impacts-abroad.trycloudflare.com/auth/shopify/callback",
-  "https://falling-les-impacts-abroad.trycloudflare.com/api/auth/callback"
+  "https://falling-les-impacts-abroad.trycloudflare.com/api/auth/callback",
+  "https://standing-starting-following-bet.trycloudflare.com/auth/callback",
+  "https://standing-starting-following-bet.trycloudflare.com/auth/shopify/callback",
+  "https://standing-starting-following-bet.trycloudflare.com/api/auth/callback",
+  "https://ln-au-yr-genesis.trycloudflare.com/auth/callback",
+  "https://ln-au-yr-genesis.trycloudflare.com/auth/shopify/callback",
+  "https://ln-au-yr-genesis.trycloudflare.com/api/auth/callback",
+  "https://tub-chain-cottages-bus.trycloudflare.com/auth/callback",
+  "https://tub-chain-cottages-bus.trycloudflare.com/auth/shopify/callback",
+  "https://tub-chain-cottages-bus.trycloudflare.com/api/auth/callback",
+  "https://signature-florence-spin-oaks.trycloudflare.com/auth/callback",
+  "https://signature-florence-spin-oaks.trycloudflare.com/auth/shopify/callback",
+  "https://signature-florence-spin-oaks.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

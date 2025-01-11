@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import "./styles/messages.css";
 
 const SuccessPage = () => {
   const [searchParams] = useSearchParams();
@@ -112,7 +113,7 @@ const SuccessPage = () => {
   }, [sessionId]);
 
   return (
-    <div>
+    <div class="successfulPayment">
       <h1>Payment successful!</h1>
       <p>Your customer record and eSIM(s) will be created and emailed soon.</p>
     </div>
