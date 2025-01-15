@@ -23,7 +23,7 @@ export default function App() {
         <Link to="/app" rel="home">
           Home
         </Link>
-        <Link to="/buy-esim">Want to buy an eSIM?</Link>
+        <Link to="/apps/buy-esim">Want to buy an eSIM?</Link>
         <Link to="/app/apisettings">API Settings</Link>
       </NavMenu>
       <Outlet />

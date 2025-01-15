@@ -3,7 +3,7 @@
 client_id = "7f4b161d9d42b0b33e269db079b92330"
 name = "stripe-maya-api"
 handle = "stripe-maya-api-1"
-application_url = "https://signature-florence-spin-oaks.trycloudflare.com"
+application_url = "https://tray-jurisdiction-scholarship-section.trycloudflare.com"
 embedded = true
 
 [build]
@@ -205,7 +205,10 @@ redirect_urls = [
   "https://tub-chain-cottages-bus.trycloudflare.com/api/auth/callback",
   "https://signature-florence-spin-oaks.trycloudflare.com/auth/callback",
   "https://signature-florence-spin-oaks.trycloudflare.com/auth/shopify/callback",
-  "https://signature-florence-spin-oaks.trycloudflare.com/api/auth/callback"
+  "https://signature-florence-spin-oaks.trycloudflare.com/api/auth/callback",
+  "https://tray-jurisdiction-scholarship-section.trycloudflare.com/auth/callback",
+  "https://tray-jurisdiction-scholarship-section.trycloudflare.com/auth/shopify/callback",
+  "https://tray-jurisdiction-scholarship-section.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
