@@ -10,14 +10,15 @@
     "config:use": "shopify app config use",
     "env": "shopify app env",
     "start": "remix-serve ./build/server/index.js",
-    "docker-start": "npm run setup && npm run start",
+    "docker-start": "npm run setup && npm run seed && npm run start",
     "setup": "prisma generate && prisma migrate deploy",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "shopify": "shopify",
     "prisma": "prisma",
     "graphql-codegen": "graphql-codegen",
     "vite": "vite",
-    "build:esim": "esbuild routes/buy-esim.jsx --bundle --outfile=public/buy-esim.js"
+    "build:esim": "esbuild routes/buy-esim.jsx --bundle --outfile=public/buy-esim.js",
+    "seed": "node prisma/seed.js"
   },
   "type": "module",
   "engines": {

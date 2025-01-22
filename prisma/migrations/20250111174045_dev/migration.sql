@@ -29,12 +29,12 @@ CREATE TABLE "ApiSettings" (
     "updatedAt" DATETIME NOT NULL
 );
 
-INSERT INTO ApiSettings (stripePublishKey, stripeSecretKey, mayaApiKey, mayaSecretKey, createdAt, updatedAt)
-VALUES (
-    '123',
-    '123',
-    '123',
-    '123',
-    CURRENT_TIMESTAMP,
-    CURRENT_TIMESTAMP
-);
+-- INSERT INTO ApiSettings (stripePublishKey, stripeSecretKey, mayaApiKey, mayaSecretKey, createdAt, updatedAt)
+-- VALUES (
+--     '123',
+--     '123',
+--     '123',
+--     '123',
+--     CURRENT_TIMESTAMP,
+--     CURRENT_TIMESTAMP
+-- );
