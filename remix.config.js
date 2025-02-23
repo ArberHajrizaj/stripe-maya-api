@@ -10,6 +10,13 @@ if (
   delete process.env.HOST;
 }
 
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "https://quickstart-aa1e7864.myshopify.com",
+  }),
+);
+
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ["**/.*"],

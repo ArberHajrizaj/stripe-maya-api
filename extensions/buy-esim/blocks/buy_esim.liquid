@@ -1,0 +1,32 @@
+{% schema %}
+{
+  "name": "Buy eSIM Block",
+  "target": "section",
+  "settings": []
+}
+{% endschema %}
+
+<div id="loading" style="display: none;">Loading...</div>
+
+<div class="region-tabs"></div>
+
+<div class="filter-container">
+  <label for="country-filter">Filter by Country:</label>
+  <select id="country-filter">
+    <option value="All">All Countries</option>
+  </select>
+</div>
+
+
+<div id="product-container">
+  <div class="product-grid"></div>
+</div>
+
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script type="module" src="{{ 'buy-esim.js' | asset_url }}"></script>
+
+{{ 'products.css' | asset_url | stylesheet_tag }}
+{{ 'cancel.css' | asset_url | stylesheet_tag }}
+{{ 'messages.css' | asset_url | stylesheet_tag }}

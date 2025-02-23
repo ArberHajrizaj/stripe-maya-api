@@ -1,0 +1,382 @@
+/* General Styling */
+.product-grid {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Region Tabs */
+.region-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.region-tab {
+  background: #8fbd20;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+.region-tab:hover {
+  background: #7fa617;
+  transform: translateY(-2px);
+}
+
+.region-tab.active {
+  background: #74a617;
+  transform: scale(1.05);
+}
+
+/* Filter Dropdown */
+.filter-container {
+  margin: 20px auto;
+  text-align: center;
+  font-size: 1em;
+}
+
+.filter-dropdown {
+  width: 280px;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-dropdown:hover {
+  border-color: #8fbd20;
+}
+
+/* Centers product cards */
+.product-container,
+.region-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Product Card */
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  width: 320px;
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Product Title */
+.product-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Product Description */
+.product-description {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Product Image */
+.product-image {
+  max-width: 100%;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Product Price */
+.product-price {
+  font-size: 1.2em;
+  margin: 12px 0;
+  font-weight: bold;
+  color: #1a1a1a;
+  letter-spacing: 0;
+}
+
+/* Buy Button */
+.buy-button {
+  background: #8fbd20;
+  color: #fff;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease-in-out;
+}
+
+.buy-button:hover {
+  background: #74a617;
+  transform: scale(1.05);
+}
+
+/* Dropdown with Flags */
+.filter-dropdown option {
+  padding-left: 30px;
+  display: flex;
+  align-items: center;
+}
+
+/* Flag Icon */
+.flag-icon {
+  width: 20px;
+  height: 15px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+ul.state-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+}
+
+li.state-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Container Styling */
+.filter-container {
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Label Styling */
+.filter-container label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Dropdown Styling */
+#country-filter {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #8fbd20;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  appearance: none; /* Remove default dropdown arrow */
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.product-states {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.product-states-title {
+  margin-bottom: 0;
+}
+
+/* Custom Arrow for Dropdown */
+#country-filter {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='black'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 35px;
+}
+
+/* Hover & Focus Effects */
+#country-filter:hover,
+#country-filter:focus {
+  border-color: #0056b3;
+  background-color: #f8f9fa;
+}
+
+/* Dropdown Options */
+#country-filter option {
+  background: #fff;
+  color: #333;
+  padding: 10px;
+}
+
+/* Dropdown inside a dark mode or darker background */
+.dark-mode #country-filter {
+  background: #333;
+  color: #fff;
+  border: 2px solid #00aaff;
+}
+
+.dark-mode #country-filter option {
+  background: #222;
+  color: #fff;
+}
+/* Container Styling */
+.filter-container {
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Label Styling */
+.filter-container label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Dropdown Styling */
+#country-filter {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #8fbd20;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  appearance: none; /* Remove default dropdown arrow */
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Custom Arrow for Dropdown */
+#country-filter {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='black'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 35px;
+}
+
+/* Hover & Focus Effects */
+#country-filter:hover,
+#country-filter:focus {
+  border-color: #0056b3;
+  background-color: #f8f9fa;
+}
+
+/* Dropdown Options */
+#country-filter option {
+  background: #fff;
+  color: #333;
+  padding: 10px;
+}
+
+/* Dropdown inside a dark mode or darker background */
+.dark-mode #country-filter {
+  background: #333;
+  color: #fff;
+  border: 2px solid #00aaff;
+}
+
+.dark-mode #country-filter option {
+  background: #222;
+  color: #fff;
+}
+
+/* 🔹 State Container */
+.state-tooltip-container {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+/* 🔹 "More States" Button */
+.more-states {
+  color: #8fbd20;
+  font-weight: bold;
+  margin-left: 6px;
+  text-decoration: underline;
+  font-size: 12px;
+}
+
+/* 🔹 Tooltip Box */
+.state-tooltip {
+  display: none;
+  position: absolute;
+  top: 25px;
+  left: 0;
+  width: 200px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* 🔹 Tooltip List */
+.state-tooltip-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 🔹 Each State Item in Tooltip */
+.tooltip-state-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+}
+
+/* 🔹 Show Tooltip on Hover */
+.state-tooltip-container:hover .state-tooltip {
+  display: block;
+}
+
+/* 🔹 Dark Mode Support */
+.dark-mode .state-tooltip {
+  background: #222;
+  color: #fff;
+  border-color: #555;
+}
+
+.dark-mode .more-states {
+  color: #00aaff;
+}
+
+@media only screen and (max-width: 1024px) {
+  .region-tabs {
+    flex-wrap: wrap;
+  }
+}

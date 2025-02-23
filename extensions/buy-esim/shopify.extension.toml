@@ -1,0 +1,6 @@
+name = "buy-esim"
+type = "theme"
+target = "global"
+snippet = "app-embed"
+enabled = true
+blocks = ["buy-esim"]

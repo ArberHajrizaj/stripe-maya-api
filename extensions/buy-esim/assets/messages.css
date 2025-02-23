@@ -1,0 +1,75 @@
+.successfulPayment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #f0fff4;
+  border: 2px solid #97d200;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 500px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.successfulPayment h1 {
+  font-size: 2.5rem;
+  color: #2f855a;
+  margin-bottom: 15px;
+}
+
+.successfulPayment p {
+  font-size: 1.2rem;
+  color: #22543d;
+  margin-bottom: 0;
+}
+
+/* Canceled style */
+.canceled {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #fff5f5;
+  border: 2px solid #e53e3e;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 500px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.canceled h1 {
+  font-size: 2.5rem;
+  color: #c53030;
+  margin-bottom: 15px;
+}
+
+.canceled p {
+  font-size: 1.2rem;
+  color: #742a2a;
+  margin-bottom: 20px;
+}
+
+.backToStoreButton {
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #e53e3e;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.backToStoreButton:hover {
+  background-color: #c53030;
+  transform: translateY(-2px);
+}
