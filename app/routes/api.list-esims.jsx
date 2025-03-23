@@ -1,9 +1,15 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
 
+// CORS headers to reuse
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 export const loader = async ({ request }) => {
   try {
-    // Get the email from query parameters
     const url = new URL(request.url);
     const email = url.searchParams.get("email");
 
@@ -11,7 +17,6 @@ export const loader = async ({ request }) => {
       throw new Error("User email is required.");
     }
 
-    // Fetch API keys from the database
     const settings = await prisma.apiSettings.findFirst();
     if (!settings || !settings.mayaApiKey || !settings.mayaSecretKey) {
       throw new Error("Maya API keys are missing in settings.");
@@ -31,7 +36,7 @@ export const loader = async ({ request }) => {
 
     const customerData = await customerResponse.json();
 
-    if (!customerResponse.ok || !customerData || !customerData.customers || customerData.customers.length === 0) {
+    if (!customerResponse.ok || !customerData?.customers?.length) {
       throw new Error("Customer not found for the provided email.");
     }
 
@@ -52,10 +57,15 @@ export const loader = async ({ request }) => {
       throw new Error(`Failed to fetch eSIMs: ${esimData.message}`);
     }
 
-    // Return eSIM data
-    return json({ esims: esimData.customer.esims || [] });
+    return json({ esims: esimData.customer.esims || [] }, {
+      headers: corsHeaders,
+    });
+
   } catch (error) {
     console.error("Error fetching eSIMs:", error.message);
-    return json({ error: error.message }, { status: 500 });
+    return json({ error: error.message }, {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };

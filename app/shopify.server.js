@@ -8,15 +8,6 @@ import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prism
 import { restResources } from "@shopify/shopify-api/rest/admin/2024-07";
 import prisma from "./db.server";
 
-// Function to add CORS headers
-function withCors(response) {
-  response.headers.set("Access-Control-Allow-Origin", ""); // Replace "" with your Shopify store domain for security
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  return response;
-}
-
 // Initialize Shopify App
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
@@ -36,8 +27,25 @@ const shopify = shopifyApp({
     : {}),
 });
 
-// Modify API responses to include CORS headers
+// Add CORS headers to every response
+function withCors(response) {
+  const newHeaders = new Headers(response.headers);
+  newHeaders.set("Access-Control-Allow-Origin", "*");
+  newHeaders.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  newHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
+// Handle incoming requests with CORS support
 export default async function handleRequest(request) {
+  // Preflight (OPTIONS) requests
   if (request.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
