@@ -1,14 +1,11 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
-
-// CORS headers to reuse
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+import { corsHeaders, handlePreflight } from "../utils/cors";
 
 export const loader = async ({ request }) => {
+  // Inside loader:
+  if (request.method === "OPTIONS") return handlePreflight();
+
   try {
     const url = new URL(request.url);
     const email = url.searchParams.get("email");
@@ -26,13 +23,16 @@ export const loader = async ({ request }) => {
     const encodedAuthString = Buffer.from(authString).toString("base64");
 
     // Fetch customer ID based on email
-    const customerResponse = await fetch(`https://api.maya.net/connectivity/v1/customers?email=${email}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Basic ${encodedAuthString}`,
+    const customerResponse = await fetch(
+      `https://api.maya.net/connectivity/v1/customers?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Basic ${encodedAuthString}`,
+        },
       },
-    });
+    );
 
     const customerData = await customerResponse.json();
 
@@ -43,13 +43,16 @@ export const loader = async ({ request }) => {
     const customerId = customerData.customers[0].id;
 
     // Fetch eSIMs for the customer
-    const esimResponse = await fetch(`https://api.maya.net/connectivity/v1/customer/${customerId}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Basic ${encodedAuthString}`,
+    const esimResponse = await fetch(
+      `https://api.maya.net/connectivity/v1/customer/${customerId}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Basic ${encodedAuthString}`,
+        },
       },
-    });
+    );
 
     const esimData = await esimResponse.json();
 
@@ -57,15 +60,20 @@ export const loader = async ({ request }) => {
       throw new Error(`Failed to fetch eSIMs: ${esimData.message}`);
     }
 
-    return json({ esims: esimData.customer.esims || [] }, {
-      headers: corsHeaders,
-    });
-
+    return json(
+      { esims: esimData.customer.esims || [] },
+      {
+        headers: corsHeaders,
+      },
+    );
   } catch (error) {
     console.error("Error fetching eSIMs:", error.message);
-    return json({ error: error.message }, {
-      status: 500,
-      headers: corsHeaders,
-    });
+    return json(
+      { error: error.message },
+      {
+        status: 500,
+        headers: corsHeaders,
+      },
+    );
   }
 };

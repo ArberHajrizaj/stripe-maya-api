@@ -636,7 +636,11 @@ export default function BuyESim() {
   useEffect(() => {
     async function fetchStripeKey() {
       try {
-        const response = await fetch("/api/settings");
+        const response = await fetch("/api/settings", {
+          headers: {
+            Authorization: "Bearer W_U87e4JjWXfh2nfENRgsFJJmYQA",
+          },
+        });
         const settings = await response.json();
         if (!settings.stripePublishKey) {
           throw new Error("Stripe publishable key is missing in settings.");

@@ -1,23 +1,18 @@
 import { json } from "@remix-run/node";
 import Stripe from "stripe";
 import prisma from "../db.server";
-
-// Reusable CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+import { corsHeaders, handlePreflight } from "../utils/cors";
 
 export const loader = async ({ request }) => {
+  // Inside loader:
+  if (request.method === "OPTIONS") return handlePreflight();
+
   try {
-    console.log("Fetching API settings from database...");
     const settings = await prisma.apiSettings.findFirst();
     if (!settings || !settings.stripeSecretKey) {
       console.error("API settings are missing or invalid.");
       throw new Error("Stripe API key is missing in settings.");
     }
-    console.log("API settings fetched successfully.");
 
     const stripe = new Stripe(settings.stripeSecretKey);
 
@@ -28,11 +23,9 @@ export const loader = async ({ request }) => {
       console.error("Missing priceId in query parameters.");
       return json(
         { error: "Missing priceId" },
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: corsHeaders },
       );
     }
-
-    console.log(`Fetching price details for priceId: ${priceId}`);
     const price = await stripe.prices.retrieve(priceId);
 
     return json(price, { headers: corsHeaders });
@@ -40,7 +33,7 @@ export const loader = async ({ request }) => {
     console.error("Error fetching price details:", error.message);
     return json(
       { error: error.message },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: corsHeaders },
     );
   }
 };

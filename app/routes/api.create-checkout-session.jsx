@@ -1,27 +1,15 @@
 import { json } from "@remix-run/node";
 import Stripe from "stripe";
 import prisma from "../db.server";
+import { corsHeaders, handlePreflight } from "../utils/cors";
 
-// Reusable CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
-// Handle preflight OPTIONS request
 export const loader = async ({ request }) => {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders,
-    });
-  }
+  if (request.method === "OPTIONS") return handlePreflight();
 
-  return json({ message: "Method not allowed" }, {
-    status: 405,
-    headers: corsHeaders,
-  });
+  return json(
+    { error: "Method not allowed" },
+    { status: 405, headers: corsHeaders },
+  );
 };
 
 // Handle POST request to create Stripe checkout session
@@ -56,14 +44,20 @@ export const action = async ({ request }) => {
       expand: ["line_items.data.price.product"],
     });
 
-    return json({ sessionId: session.id }, {
-      headers: corsHeaders,
-    });
+    return json(
+      { sessionId: session.id },
+      {
+        headers: corsHeaders,
+      },
+    );
   } catch (error) {
     console.error("Error creating checkout session:", error);
-    return json({ error: error.message }, {
-      status: 500,
-      headers: corsHeaders,
-    });
+    return json(
+      { error: error.message },
+      {
+        status: 500,
+        headers: corsHeaders,
+      },
+    );
   }
 };

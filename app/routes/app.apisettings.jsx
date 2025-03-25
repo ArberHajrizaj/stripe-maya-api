@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+// import prisma from "../db.server";
+// import { corsHeaders, handlePreflight } from "../utils/cors";
+// import { isAuthorized } from "../utils/auth";
 
 const ApiSettings = () => {
   const [settings, setSettings] = useState({
@@ -8,13 +11,19 @@ const ApiSettings = () => {
     mayaSecretKey: "",
   });
 
+  const API_TOKEN = "W_U87e4JjWXfh2nfENRgsFJJmYQA";
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const fetchSettings = async () => {
     try {
-      setError(""); // Clear errors before fetching
-      const response = await fetch("/api/settings");
+      setError("");
+      const response = await fetch("/api/settings", {
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch settings.");
       }
@@ -48,7 +57,10 @@ const ApiSettings = () => {
       console.log("Submitting form data:", settings); // Debugging log
       const response = await fetch("/api/settings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
         body: JSON.stringify(settings),
       });
       if (!response.ok) {

@@ -9,10 +9,10 @@ async function main() {
     console.log('Seeding ApiSettings...');
     await prisma.apiSettings.create({
       data: {
-        stripePublishKey: 'pk_test_51QDBSMHIlwY6M0uC3SmX3jxBXuVwUi2E3PCP3mL9E0T4ISWqAWKzlXOwpzTGF5zKED4qkKAFzzHRy4CjbSY4thIo00IGOklE5L',
-        stripeSecretKey: 'sk_test_51QDBSMHIlwY6M0uCPgHZstV0aV2J3IEUVO2vtxk8H3FiZ5S8LDvrG9TNRZ7oKiAOlY3xy7OZ483WDjVfGZGHr4yi00KLVH77Ha',
-        mayaApiKey: 'tSoiJXlDnz76',
-        mayaSecretKey: 'Z6JJP2i8OojucrGfEsYPm3kIyohxW7KQ7NpTV12qkAwAqtd5eWIMdScNCiLbpQFl',
+        stripePublishKey: '1234',
+        stripeSecretKey: '1234',
+        mayaApiKey: '1234',
+        mayaSecretKey: '1234',
       },
     });
     console.log('Seeded ApiSettings successfully.');

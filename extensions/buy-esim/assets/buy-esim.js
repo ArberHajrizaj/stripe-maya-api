@@ -607,10 +607,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchStripeKey() {
     try {
-      const response = await fetch("https://maya-lively-snowflake-4.fly.dev/api/settings");
+      const response = await fetch("https://maya-lively-snowflake-4.fly.dev/api/settings", {
+        headers: {
+          Authorization: "Bearer W_U87e4JjWXfh2nfENRgsFJJmYQA",
+        },
+      });
+
       const settings = await response.json();
+      console.log("Fetched settings:", settings);
+
       if (!settings.stripePublishKey) throw new Error("Missing Stripe Key");
+
       stripePromise = Stripe(settings.stripePublishKey);
+      console.log("Stripe initialized", stripePromise);
     } catch (error) {
       console.error("Error fetching Stripe key:", error.message);
     }
@@ -754,9 +763,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const productDiv = document.createElement("div");
         productDiv.classList.add("product-card");
 
-
-      const productTitle = product.name ? product.name : "";
-      const productDescription = product.description ? product.description : "";
+        const productTitle = product.name ? product.name : "";
+        const productDescription = product.description
+          ? product.description
+          : "";
 
         const statesIncluded = product.statesIncluded;
         let stateListHTML = "";
@@ -824,7 +834,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         productDiv.innerHTML = `
           <h2 class="product-title">${productTitle}</h2>
-          <p class="product-description">${productDescription }</p>
+          <p class="product-description">${productDescription}</p>
           ${product.images?.length ? `<img src="${product.images[0]}" alt="${product.productTitle}" class="product-image" />` : ""}
           <p class="product-price">Price: ${getCurrencySymbol(product.priceCurrency)} ${product.priceAmount}</p>
           <p class="product-states-title">Available Countries:</p>

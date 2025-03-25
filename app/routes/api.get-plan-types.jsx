@@ -1,14 +1,11 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
+import { corsHeaders, handlePreflight } from "../utils/cors";
 
-// Reusable CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+export const loader = async ({ request }) => {
+  // Inside loader:
+  if (request.method === "OPTIONS") return handlePreflight();
 
-export const loader = async () => {
   try {
     const settings = await prisma.apiSettings.findFirst();
 
@@ -27,7 +24,7 @@ export const loader = async () => {
           Accept: "application/json",
           Authorization: `Basic ${encodedAuthString}`,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -36,14 +33,20 @@ export const loader = async () => {
       throw new Error(data.message || "Failed to fetch plan types.");
     }
 
-    return json({ planTypes: data.plan_types }, {
-      headers: corsHeaders,
-    });
+    return json(
+      { planTypes: data.plan_types },
+      {
+        headers: corsHeaders,
+      },
+    );
   } catch (error) {
-    console.error("Error fetching plan types:", er ror.message);
-    return json({ error: error.message }, {
-      status: 500,
-      headers: corsHeaders,
-    });
+    console.error("Error fetching plan types:", error.message);
+    return json(
+      { error: error.message },
+      {
+        status: 500,
+        headers: corsHeaders,
+      },
+    );
   }
 };

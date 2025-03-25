@@ -1,11 +1,7 @@
 import { json } from "@remix-run/node";
 import prisma from "../db.server";
-
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+import { isAuthorized } from "../utils/auth";
+import { corsHeaders, handlePreflight } from "../utils/cors";
 
 const defaultSettings = {
   stripePublishKey: "",
@@ -14,51 +10,65 @@ const defaultSettings = {
   mayaSecretKey: "",
 };
 
-// Handle GET requests
-export const loader = async () => {
-  try {
-    console.log("Fetching API settings...");
-    let settings = await prisma.apiSettings.findFirst();
+// --- GET SETTINGS ---
+export const loader = async ({ request }) => {
+  if (request.method === "OPTIONS") return handlePreflight();
 
+  if (!isAuthorized(request)) {
+    return json(
+      { error: "Unauthorized" },
+      { status: 401, headers: corsHeaders },
+    );
+  }
+
+  try {
+    let settings = await prisma.apiSettings.findFirst();
     if (!settings) {
-      console.warn("No API settings found. Creating default settings...");
-      settings = await prisma.apiSettings.create({
-        data: defaultSettings,
-      });
+      settings = await prisma.apiSettings.create({ data: defaultSettings });
     }
 
-    console.log("Fetched or created API settings:", settings);
-    return json(settings, { headers: CORS_HEADERS });
+    return json(settings, { headers: corsHeaders });
   } catch (error) {
-    console.error("Error loading API settings:", error.message);
     return json(
       { error: "Failed to load settings." },
-      { status: 500, headers: CORS_HEADERS }
+      { status: 500, headers: corsHeaders },
     );
   }
 };
 
-// Handle POST and OPTIONS (preflight)
+// --- POST SETTINGS ---
 export const action = async ({ request }) => {
+  if (request.method === "OPTIONS") return handlePreflight();
+
+  if (!isAuthorized(request)) {
+    return json(
+      { error: "Unauthorized" },
+      { status: 401, headers: corsHeaders },
+    );
+  }
+
+  if (request.method !== "POST") {
+    return json(
+      { error: "Method not allowed" },
+      { status: 405, headers: corsHeaders },
+    );
+  }
+
   try {
-    // Handle CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: CORS_HEADERS,
-      });
-    }
-
-    if (request.method !== "POST") {
-      return json({ error: "Method not allowed" }, { status: 405, headers: CORS_HEADERS });
-    }
-
     const data = await request.json();
-    const { stripePublishKey, stripeSecretKey, mayaApiKey, mayaSecretKey } = data;
+    const { stripePublishKey, stripeSecretKey, mayaApiKey, mayaSecretKey } =
+      data;
 
-    if (!stripePublishKey || !stripeSecretKey || !mayaApiKey || !mayaSecretKey) {
-      console.error("Missing required fields in request:", data);
-      return json({ error: "All fields are required." }, { status: 400, headers: CORS_HEADERS });
+    if (
+      !stripePublishKey ||
+      !stripeSecretKey ||
+      !mayaApiKey ||
+      !mayaSecretKey
+    ) {
+      return json(
+        { error: "All fields are required." },
+        { status: 400, headers: corsHeaders },
+      );
     }
 
     const updatedSettings = await prisma.apiSettings.upsert({
@@ -67,10 +77,11 @@ export const action = async ({ request }) => {
       create: { stripePublishKey, stripeSecretKey, mayaApiKey, mayaSecretKey },
     });
 
-    console.log("Settings updated successfully:", updatedSettings);
-    return json(updatedSettings, { headers: CORS_HEADERS });
+    return json(updatedSettings, { headers: corsHeaders });
   } catch (error) {
-    console.error("Error saving API settings:", error.message, error.stack);
-    return json({ error: "Failed to save API settings." }, { status: 500, headers: CORS_HEADERS });
+    return json(
+      { error: "Failed to save API settings." },
+      { status: 500, headers: corsHeaders },
+    );
   }
 };
