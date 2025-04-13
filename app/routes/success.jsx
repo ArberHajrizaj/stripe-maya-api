@@ -1,121 +1,127 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./styles/messages.css";
 
 const SuccessPage = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const hasRun = useRef(false); // Prevent duplicate runs in dev
 
-  const createCustomerAndEsim = async (sessionId) => {
+  const createEsimAndAttachCustomer = async (sessionId) => {
+    const alreadyProcessed = await fetch(
+      `/api/check-checkout-session?session_id=${sessionId}`,
+    );
+    const result = await alreadyProcessed.json();
+
+    if (result?.processed) {
+      console.warn("⏭️ Session already processed, skipping eSIM creation.");
+      return;
+    }
+
     try {
-      if (!sessionId) {
-        throw new Error("No sessionId found in URL.");
-      }
-
-      const stripeResponse = await fetch(
+      const stripeRes = await fetch(
         `/api/get-stripe-session?session_id=${sessionId}`,
       );
-      const stripeData = await stripeResponse.json();
-
-      if (!stripeResponse.ok) {
-        throw new Error(`Failed to fetch Stripe session: ${stripeData.error}`);
-      }
+      const stripeData = await stripeRes.json();
+      if (!stripeRes.ok) throw new Error(stripeData.error);
 
       const { email, name } = stripeData.customer_details || {};
       const lineItems = stripeData.line_items?.data || [];
 
-      console.log("Email from Stripe session:", email);
-
       if (!email || !name || lineItems.length === 0) {
-        throw new Error(
-          "Stripe session data is incomplete. Missing email, name, or line items.",
-        );
+        throw new Error("Missing email, name, or line items.");
       }
 
       const [firstName, ...lastNameArr] = name.split(" ");
       const lastName = lastNameArr.join(" ");
 
-      const mayaResponse = await fetch("/api/create-maya-customer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          first_name: firstName,
-          last_name: lastName,
-        }),
-      });
-
-      const mayaData = await mayaResponse.json();
-
-      if (!mayaResponse.ok) {
-        throw new Error(`Failed to create Maya customer: ${mayaData.error}`);
-      }
-
-      const mayaCustomerId = mayaData.mayaCustomer.id;
-
       for (const item of lineItems) {
-        const product = item.price.product; // Product data is expanded
+        const product = item.price.product;
         const planTypeId = product.metadata?.PlanID;
 
         if (!planTypeId) {
-          throw new Error(`PlanID is missing in the product metadata.`);
+          console.warn("⚠️ Missing PlanID for product. Skipping...");
+          continue;
         }
 
-        const esimResponse = await fetch("/api/create-esim", {
+        const esimRes = await fetch("/api/create-esim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan_type_id: planTypeId }),
+        });
+
+        const esimText = await esimRes.text();
+        let esimData;
+        try {
+          esimData = JSON.parse(esimText);
+        } catch {
+          console.error("❌ Failed to parse eSIM response");
+          continue;
+        }
+
+        if (!esimRes.ok) {
+          console.error(
+            "❌ eSIM creation failed:",
+            esimData?.error || esimText,
+          );
+          continue;
+        }
+
+        const { uid, qrCodeUrl, activation_code } = esimData;
+
+        const customerRes = await fetch("/api/create-maya-customer", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            customer_id: mayaCustomerId,
-            plan_type_id: planTypeId,
+            email,
+            first_name: firstName,
+            last_name: lastName,
+            iccid: uid,
           }),
         });
 
-        const esimData = await esimResponse.json();
-        if (!esimResponse.ok) {
-          throw new Error(`Failed to create eSIM: ${esimData.error}`);
+        const customerData = await customerRes.json();
+        const customerId = customerData?.mayaCustomer?.id || customerData?.id;
+
+        if (!customerId) {
+          console.error("❌ Failed to retrieve Maya customer ID");
+          continue;
         }
 
-        console.log("Sending email with details:", {
-          email,
-          qrCodeUrl: esimData.qrCodeUrl,
-          activationCode: esimData.activation_code,
-        });
-
-        // Send email with QR code and activation code
         await fetch("/api/send-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email, // Retrieved from Stripe
-            qrCodeUrl: esimData.qrCodeUrl, // Generated QR code URL
-            activationCode: esimData.activation_code, // Activation code from eSIM API
+            email,
+            qrCodeUrl,
+            activationCode: activation_code,
+            uid,
           }),
         });
-
-        console.log("eSIM created successfully and email sent:", esimData);
       }
-    } catch (error) {
-      console.error(
-        "Error during customer and eSIM creation process:",
-        error.message,
-      );
+
+      // ✅ Mark session as processed
+      await fetch("/api/mark-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+    } catch (err) {
+      console.error("❌ Error in eSIM + customer flow:", err.message);
     }
   };
 
   useEffect(() => {
-    if (sessionId) {
-      console.log(
-        "Session ID available, calling createCustomerAndEsim with sessionId:",
-        sessionId,
-      );
-      createCustomerAndEsim(sessionId);
+    if (sessionId && !hasRun.current) {
+      hasRun.current = true;
+      createEsimAndAttachCustomer(sessionId);
     }
   }, [sessionId]);
 
   return (
-    <div class="successfulPayment">
+    <div className="successfulPayment">
       <h1>Payment successful!</h1>
-      <p>Your customer record and eSIM(s) will be created and emailed soon.</p>
+      <p>Your eSIM(s) will be created and emailed shortly.</p>
     </div>
   );
 };

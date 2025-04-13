@@ -54,7 +54,6 @@ const ApiSettings = () => {
     try {
       setError(""); // Clear errors
       setSuccess(""); // Clear success messages
-      console.log("Submitting form data:", settings); // Debugging log
       const response = await fetch("/api/settings", {
         method: "POST",
         headers: {

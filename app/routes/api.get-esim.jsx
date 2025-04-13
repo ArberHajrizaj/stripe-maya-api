@@ -24,7 +24,7 @@ export const loader = async () => {
     const esimList = await response.json();
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch eSIMs: ${esimList.message || esimList.error}`
+        `Failed to fetch eSIMs: ${esimList.message || esimList.error}`,
       );
     }
 

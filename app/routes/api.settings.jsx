@@ -10,6 +10,8 @@ const defaultSettings = {
   mayaSecretKey: "",
 };
 
+
+
 // --- GET SETTINGS ---
 export const loader = async ({ request }) => {
   if (request.method === "OPTIONS") return handlePreflight();

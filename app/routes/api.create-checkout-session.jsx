@@ -30,6 +30,7 @@ export const action = async ({ request }) => {
     const host = request.headers.get("host");
     const protocol = host.includes("localhost") ? "http" : "https";
 
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [

@@ -1,80 +1,69 @@
 import { json } from "@remix-run/node";
-import nodemailer from "nodemailer";
-import { google } from "googleapis";
+import { Resend } from "resend";
 
-// Retrieve credentials from environment variables
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI =
-process.env.REDIRECT_URI || "https://developers.google.com/oauthplayground";
-const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-
-// Initialize OAuth2 client
-const oAuth2Client = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLIENT_SECRET,
-  REDIRECT_URI,
-);
-
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const action = async ({ request }) => {
   try {
-    const { email, qrCodeUrl, activationCode } = await request.json();
+    const { email, qrCodeUrl, activationCode, uid } = await request.json();
 
-    if (!email || !qrCodeUrl || !activationCode) {
-      throw new Error("Missing required fields for email.");
+    if (!email || !qrCodeUrl || !activationCode || !uid) {
+      throw new Error("Missing required fields.");
     }
 
-    console.log("Preparing to send email to:", email);
-
-    // Generate an access token
-    const accessToken = await oAuth2Client.getAccessToken();
-
-    if (accessToken.token) {
-      console.log("Access token retrieved successfully.");
-    } else {
-      throw new Error("Failed to retrieve access token.");
-    }
-
-    // Configure Nodemailer with Gmail API
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: process.env.EMAIL_USER, // Use environment variable for email
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        refreshToken: REFRESH_TOKEN,
-        accessToken: accessToken.token,
-      },
-    });
-
-    // Email content
-    const mailOptions = {
-      from: `GLOBESIM <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "GLOBESIM <onboarding@resend.dev>",
       to: email,
       subject: "Your eSIM Activation Details",
       html: `
         <p>Dear Customer,</p>
         <p>Thank you for your purchase! Below are your eSIM activation details:</p>
-        <p><strong>Activation Code:</strong> ${activationCode}</p>
-        <p><strong>Scan the QR Code below to activate your eSIM:</strong></p>
-        <img src="${qrCodeUrl}" alt="eSIM QR Code" style="max-width: 300px;" />
-        <p>If you have any questions, please contact our support team.</p>
+    
+        <h3>QR Code Installation</h3>
+        <ul>
+          <li>Scan the <strong>QR code</strong> with the <strong>Camera</strong> app.</li>
+          <li>Follow the prompts on screen to add a new Data Plan.</li>
+        </ul>
+    
+        <h3>Apple iOS Devices</h3>
+        <ul>
+          <li>Go to <strong>Settings</strong> &gt; <strong>Cellular</strong> (Mobile or Mobile Service).</li>
+          <li>Select the new eSIM plan under Cellular Data Plans.</li>
+          <li>Set <strong>Data Roaming</strong> to <strong>ON</strong>.</li>
+        </ul>
+    
+        <h3>Android Devices</h3>
+        <ul>
+          <li>Go to <strong>Settings</strong> &gt; <strong>Network and Internet</strong>.</li>
+          <li>Turn on <strong>Data Roaming</strong>.</li>
+          <li>Set the eSIM as the <strong>Mobile Data SIM</strong>.</li>
+        </ul>
+    
+        <h3>Tips & Reminders</h3>
+        <ul>
+          <li>Set the eSIM as your <strong>cellular data plan</strong> when you arrive at your destination.</li>
+          <li>Turn off <strong>Data Roaming</strong> on your <strong>main SIM card</strong> to avoid charges.</li>
+          <li>Disable iCloud Sync, Google Photos, or other apps that use <strong>background data</strong>.</li>
+        </ul>
+    
+        <p><strong>Your QR Code is attached to this email.</strong></p>
+        <p>If you have any questions, contact our support team.</p>
         <p>Best regards,<br>GLOBESIM</p>
       `,
-    };
+      attachments: [
+        {
+          filename: "qrcode.png",
+          content: qrCodeUrl.split("base64,")[1],
+          encoding: "base64",
+          cid: "qrcode",
+        },
+      ],
+    });
 
-    // Send the email
-    const info = await transporter.sendMail(mailOptions);
 
-    console.log("Email sent successfully:", info.messageId);
     return json({ success: true });
-  } catch (error) {
-    console.error("Error sending email:", error.message);
-    return json({ error: error.message }, { status: 500 });
+  } catch (err) {
+    console.error("❌ Full Resend error:", err);
+    return json({ error: err.message }, { status: 500 });
   }
 };
-
-
