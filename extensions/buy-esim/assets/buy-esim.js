@@ -607,7 +607,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchStripeKey() {
     try {
-      const response = await fetch("http://localhost:59995/api/settings", {
+      const response = await fetch("https://maya-lively-snowflake-4.fly.dev/api/settings", {
         headers: {
           Authorization: "Bearer W_U87e4JjWXfh2nfENRgsFJJmYQA",
         },
@@ -629,8 +629,8 @@ document.addEventListener("DOMContentLoaded", function () {
       await fetchStripeKey();
 
       const [productsResponse, planTypesResponse] = await Promise.all([
-        fetch("http://localhost:59995/api/products"),
-        fetch("http://localhost:59995/api/get-plan-types"),
+        fetch("https://maya-lively-snowflake-4.fly.dev/api/products"),
+        fetch("https://maya-lively-snowflake-4.fly.dev/api/get-plan-types"),
       ]);
 
       const [productsData, planTypesData] = await Promise.all([
@@ -661,7 +661,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (product.default_price) {
             try {
               const priceResponse = await fetch(
-                `http://localhost:59995/api/prices?priceId=${product.default_price}`,
+                `https://maya-lively-snowflake-4.fly.dev/api/prices?priceId=${product.default_price}`,
               );
               const priceData = await priceResponse.json();
               priceAmount = (priceData.unit_amount / 100).toFixed(2);
@@ -852,7 +852,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const stripe = stripePromise;
 
       const response = await fetch(
-        "http://localhost:59995/api/create-checkout-session",
+        "https://maya-lively-snowflake-4.fly.dev/api/create-checkout-session",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
